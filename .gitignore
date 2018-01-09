@@ -3,3 +3,10 @@ config/config.json
 .vscode/launch.json
 debug
 log/*.*
+data/10minorderdebug.log
+data/minorderdebug.log
+data/Summary5MinTop10Report.log
+data/MinReport/*.*
+config/10MinCurtCurrency.json
+config/MinCurtCurrency.json
+data/5minsscoremap.log
