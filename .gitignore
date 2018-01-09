@@ -1,0 +1,5 @@
+data/temp/minover100dif.log
+config/config.json
+.vscode/launch.json
+debug
+log/*.*
