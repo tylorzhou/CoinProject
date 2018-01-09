@@ -1,0 +1,425 @@
+[
+ {
+  "Currency": "ADA",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "ADX",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "ARDR",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "ARK",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "BAY",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "BCC",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "BTC",
+  "Balance": "0.10096066",
+  "Available": "0.10096066",
+  "Pending": "0",
+  "CryptoAddress": "12WU9V3499Ksedp2xJdcYyjksSHLJbgc3B",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "BTG",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "BTS",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "CVC",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "DASH",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "DCR",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "DGB",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "DNT",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "EMC2",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "ETC",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "ETH",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "0x18f26c554e1e75ce06870ebe311106092db4399a",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "GAME",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "LTC",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "MCO",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "MONA",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "MTL",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "NAV",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "NEO",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "NXS",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "OK",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "OMG",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "PAY",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "PIVX",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "POWR",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "QTUM",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "RBY",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "RISE",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "SC",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "START",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "STRAT",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "TRIG",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "TRST",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "UBQ",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "USDT",
+  "Balance": "1.53519479",
+  "Available": "1.53519479",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "VOX",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "VTC",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "XEM",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "XLM",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "XMR",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "XRP",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ },
+ {
+  "Currency": "XVG",
+  "Balance": "0",
+  "Available": "0",
+  "Pending": "0",
+  "CryptoAddress": "",
+  "Requested": false,
+  "Uuid": ""
+ }
+]
