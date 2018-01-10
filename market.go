@@ -805,7 +805,8 @@ func GetSummaryTask() {
 		//minute task
 		MinReport(smap, sdifmap)
 
-		MinTasktobuy(sdifmap, &mincrtcy)
+		//MinTasktobuy(sdifmap, &mincrtcy)
+		MinTasktobuy1try(sdifmap, &mincrtcy)
 
 		if Triggled.coin != "" && mincrtcy.Name != "BTC" {
 			MinTasktosell(smap, &mincrtcy)
@@ -1602,7 +1603,7 @@ type MINDIF struct {
 }
 
 func MinReport(smap map[string][]*MarketSummary, sdifmap map[string][]MINDIF) {
-
+	Hundred, _ := decimal.NewFromString("100.0")
 	now := time.Now()
 	for k, v := range smap {
 		l := len(v)
@@ -1646,9 +1647,9 @@ func MinReport(smap map[string][]*MarketSummary, sdifmap map[string][]MINDIF) {
 		}
 		sdifmap[k] = sdif
 
-		datadif := fmt.Sprintf("%s Highdif: %s Lowdif:%s Askdif:%s Biddif:%s OpenBuyOrdersdif:%d OpenSellOrdersdif:%d Volumedif:%s Lastdif:%s (%s to %s)  BaseVolumedif:%s \n", time.Now().Format(time.RFC3339), Highdif.String(),
-			Lowdif.String(), Askdif.String(), Biddif.String(), OpenBuyOrdersdif, OpenSellOrdersdif, Volumedif.String(), Lastdif.String(), v[l-2].Last.String(), v[l-1].Last.String(),
-			BaseVolumedif.String())
+		datadif := fmt.Sprintf("%s Highdif: %s Lowdif:%s Askdif:%s Biddif:%s OpenBuyOrdersdif:%d OpenSellOrdersdif:%d Volumedif:%s Lastdif:%s BaseVolumedif:%s \n", time.Now().Format(time.RFC3339), Highdif.String(),
+			Lowdif.String(), Askdif.String(), Biddif.String(), OpenBuyOrdersdif, OpenSellOrdersdif, Volumedif.String(), Lastdif.String(), BaseVolumedif.String())
+		datadif += fmt.Sprintf("price: %s ~ %s rate %%%s\n", v[l-2].Last.String(), v[l-1].Last.String(), v[l-1].Last.Sub(v[l-2].Last).Div(v[l-2].Last).Mul(Hundred))
 
 		WriteReport("./data/MinReport/"+k+"dif.log", datadif)
 
@@ -3270,5 +3271,222 @@ func PlaceBuyOrderforFifteenmin(buy string, crtcy CurtCurrencyMem) (CurtCurrency
 	}
 
 	return crtcy, errors.New("buy oder failed")
+
+}
+
+type minMonitor struct {
+	vdif  decimal.Decimal
+	mtime time.Time
+}
+
+var minMonitorMap = make(map[string]minMonitor)
+
+func MinTasktobuy1try(sdifmap map[string][]MINDIF, mincrtcy *CurtCurrencyMem) {
+	//list LTC coin as example
+	// need more time to collect sample
+	ltc, b := sdifmap["BTC-LTC"]
+	if b == false || len(ltc) < 60 {
+		return
+	}
+	zero, _ := decimal.NewFromString("0.0")
+	//one, _ := decimal.NewFromString("1.0")
+	NEG, _ := decimal.NewFromString("-1")
+	Rang, _ := decimal.NewFromString("30.0")
+	avgmap := make(map[string]decimal.Decimal)
+	avgprice := make(map[string]decimal.Decimal)
+
+	for k, v := range sdifmap {
+		sampledata := v[20:50] // got 30 min sample
+		sum, _ := decimal.NewFromString("0.0")
+		sumprice, _ := decimal.NewFromString("0.0")
+		for _, v1 := range sampledata {
+			if v1.BaseVolumedif.LessThan(zero) == true {
+				v1.BaseVolumedif = v1.BaseVolumedif.Mul(NEG)
+			}
+			sum = sum.Add(v1.BaseVolumedif)
+			sumprice = sumprice.Add(v1.Last)
+		}
+		avg := sum.Div(Rang)
+		avgp := sumprice.Div(Rang)
+
+		avgmap[k] = avg
+		avgprice[k] = avgp
+	}
+
+	timesmap := make(map[string]decimal.Decimal)
+	for k, v := range sdifmap {
+		l := len(v)
+		avg := avgmap[k]
+		if avg.LessThanOrEqual(zero) {
+			//WriteReport("./data/minorderdebug.log", "wrong div:"+k+"v:"+avg.String()+" \n")
+			continue
+		}
+
+		/* 		if v[l-1].BaseVolumedif.LessThanOrEqual(one) {
+			continue
+		} */
+
+		timesmap[k] = v[l-1].BaseVolumedif.Div(avgmap[k])
+	}
+
+	top3 := make([]TOP3Times, 3, 3)
+	for k, v := range timesmap {
+		for ktop, vtop := range top3 {
+
+			if v.Sub(vtop.times).GreaterThan(zero) {
+				copy(top3[ktop+1:], top3[ktop:])
+				top3[ktop] = TOP3Times{
+					coin:  k,
+					times: v,
+				}
+				break
+			}
+		}
+
+	}
+
+	msg := ""
+	for i := range top3 {
+		l1 := len(sdifmap[top3[i].coin])
+		if l1 < 1 {
+			Error.Printf("top3 l1 less than 1, %v\n", top3)
+			continue
+		}
+		msg += TimeStamp()
+		msg += "coin: "
+		msg += top3[i].coin
+		msg += " times: "
+		msg += top3[i].times.String()
+		msg += " avgdif: " + avgmap[top3[i].coin].String()
+
+		msg += " Last: " + sdifmap[top3[i].coin][l1-1].Last.String()
+		msg += " High: " + sdifmap[top3[i].coin][l1-1].High.String()
+		msg += " volumedif: " + sdifmap[top3[i].coin][l1-1].BaseVolumedif.String()
+		msg += " \n"
+	}
+
+	WriteReport("./data/minorderdebug1try.log", msg)
+
+	lockcoin, locked := glockcmap[top3[0].coin]
+	if locked {
+		if time.Since(lockcoin.locktime).Seconds() < 60*60 {
+			msg := "this coin locked by reason:" + lockcoin.lockreason + "\n"
+			WriteReport("./data/minorderdebug1try.log", msg)
+			return
+		}
+	}
+
+	//only process top 1 now, the other 2 can process later
+	TRIGGLE, _ := decimal.NewFromString("10.0")
+
+	ONE, _ := decimal.NewFromString("1.0")
+	pricebar, _ := decimal.NewFromString("0.30")
+	btriggled := false
+	newtriglecoin := ""
+
+	for mk, mv := range minMonitorMap {
+		timedif := time.Since(mv.mtime).Seconds()
+		if timedif < 5 || timedif > 65 {
+			continue
+		}
+
+		temp := sdifmap[mk]
+		l := len(temp)
+		if l < 1 {
+			continue
+		}
+
+		if temp[l-1].BaseVolumedif.GreaterThanOrEqual(ONE) {
+			newtriglecoin = mk
+			msg := "second time triggled succesfully:" + mk + "\n"
+			WriteReport("./data/minorderdebug1try.log", TimeStamp()+msg)
+			btriggled = true
+			break
+		}
+	}
+
+	for i := range top3 {
+		Times10 := top3[i].times.Sub(TRIGGLE).GreaterThan(zero)
+		l1 := len(sdifmap[top3[i].coin])
+		if l1 < 1 {
+			continue
+		}
+		dif := sdifmap[top3[i].coin][l1-1].Last.Sub(avgprice[top3[i].coin])
+
+		if dif.Div(avgprice[top3[i].coin]).GreaterThan(pricebar) {
+			msg := "Price increase over 30%, maybe not to buy: " + top3[i].coin + "\n"
+			msg += "try to lock coin: " + top3[i].coin + "\n"
+			WriteReport("./data/minorderdebug1try.log", msg)
+
+			lockcoin := lockedcoin{
+				coin:       top3[i].coin,
+				locktime:   time.Now(),
+				lockreason: "Price increase over 30%",
+			}
+			glockcmap[lockcoin.coin] = lockcoin
+
+			continue
+		}
+
+		if Times10 {
+
+			if sdifmap[top3[i].coin][l1-1].BaseVolumedif.GreaterThan(ONE) {
+
+				minMonitorcoin := minMonitor{
+					vdif:  sdifmap[top3[i].coin][l1-1].BaseVolumedif,
+					mtime: time.Now(),
+				}
+				minMonitorMap[top3[i].coin] = minMonitorcoin
+				WriteReport("./data/minorderdebug1try.log", TimeStamp()+"monitor coin: "+top3[i].coin+"\n")
+			}
+		}
+
+	}
+
+	if btriggled == false {
+		return
+	}
+
+	if Triggled.coin != "" {
+		msg = "Already had trigged coin: " + Triggled.coin + " "
+		if top3[0].coin == "BTC-"+mincrtcy.Name {
+			msg += "new triggled coin is the same. in the safe mode.\n"
+		} else {
+			msg += "new triggled coin is " + top3[0].coin + "\n"
+		}
+
+		WriteReport("./data/minorderdebug1try.log", msg)
+		return
+	}
+
+	if mincrtcy.Name != "BTC" {
+		msg = "Current coin: " + mincrtcy.Name + " is not BTC\n"
+		WriteReport("./data/minorderdebug1try.log", msg)
+		return
+	}
+
+	if btriggled {
+		msg = "should buy but disabled: " + newtriglecoin
+		WriteReport("./data/minorderdebug1try.log", TimeStamp()+msg)
+		return
+	}
+
+	if btriggled {
+		Triggled = TriggledMin{
+			coin:         top3[0].coin,
+			purchased:    zero, // price here is not right
+			TriggledTime: time.Now(),
+		}
+		lockcoin := lockedcoin{
+			coin:       top3[0].coin,
+			locktime:   time.Now(),
+			lockreason: "already bought",
+		}
+		msg := "locked coin " + lockcoin.coin + " when buying\n"
+		WriteReport("./data/minorderdebug1try.log", msg)
+		glockcmap[lockcoin.coin] = lockcoin
+		crtcy, _ := PlaceBuyOrderformin(Triggled.coin, *mincrtcy)
+		*mincrtcy = crtcy
+	}
 
 }
