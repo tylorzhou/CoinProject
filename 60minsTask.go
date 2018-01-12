@@ -116,11 +116,11 @@ func SummaryHourReport(smap map[string][]*MarketSummary) []SummaryReport {
 				}
 
 				if ihour == 0 {
-					emailText += fmt.Sprintf("%d(%s)", vLastchg.IntPart(), pricechg)
-					seqtext += fmt.Sprintf("%s", seq)
+					emailText += fmt.Sprintf("vchg:%d(%s%%)", vLastchg.IntPart(), pricechg)
+					seqtext += fmt.Sprintf("seq:%s", seq)
 				} else {
-					emailText += fmt.Sprintf("=>%d(%s)", vLastchg.IntPart(), pricechg)
-					seqtext += fmt.Sprintf(" %s", seq)
+					emailText += fmt.Sprintf("=>%d(%s%%)", vLastchg.IntPart(), pricechg)
+					seqtext += fmt.Sprintf("->%s", seq)
 				}
 
 			}
