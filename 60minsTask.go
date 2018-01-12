@@ -15,14 +15,14 @@ import (
 
 type HourRec struct {
 	smap  map[string][]*MarketSummary
-	Top10 []SummaryReport
+	Top15 []SummaryReport
 }
 
 var HourRecSlice = make([]HourRec, 0, 10)
 
 func SummaryHourReport(smap map[string][]*MarketSummary) []SummaryReport {
 
-	Top10 := make([]SummaryReport, 10, 10)
+	Top15 := make([]SummaryReport, 15, 15)
 	zero, _ := decimal.NewFromString("0.0")
 	percent, _ := decimal.NewFromString("100.0")
 	Topic := ""
@@ -44,10 +44,10 @@ func SummaryHourReport(smap map[string][]*MarketSummary) []SummaryReport {
 			Pto:        vlatest.Last,
 		}
 
-		for i := range Top10 {
-			if rpt.Vchg.Sub(Top10[i].Vchg).GreaterThan(zero) {
-				copy(Top10[i+1:], Top10[i:])
-				Top10[i] = rpt
+		for i := range Top15 {
+			if rpt.Vchg.Sub(Top15[i].Vchg).GreaterThan(zero) {
+				copy(Top15[i+1:], Top15[i:])
+				Top15[i] = rpt
 				break
 			}
 		}
@@ -62,7 +62,7 @@ func SummaryHourReport(smap map[string][]*MarketSummary) []SummaryReport {
 
 	rec := HourRec{
 		smap:  smaptemp,
-		Top10: Top10,
+		Top15: Top15,
 	}
 	HourRecSlice = append(HourRecSlice, rec)
 	if len(HourRecSlice) > 10 {
@@ -72,25 +72,25 @@ func SummaryHourReport(smap map[string][]*MarketSummary) []SummaryReport {
 	emailText := ""
 
 	lenhour := len(HourRecSlice)
-	for i := range Top10 {
-		emailText += fmt.Sprintf("                  %s                   \n", Top10[i].MarketName)
-		emailText += fmt.Sprintf("Price     : %s => %s (%%%s) \n", Top10[i].Pfrom.String(), Top10[i].Pto.String(), (Top10[i].Pchg.Div(Top10[i].Pfrom)).Mul(percent).String())
-		emailText += fmt.Sprintf("BaseVolume: %s => %s (VolumeChange %s, %%%s) \n", Top10[i].Vfrom.String(), Top10[i].Vto.String(), Top10[i].Vchg.String(),
-			Top10[i].Vchg.Div(Top10[i].Vfrom).Mul(percent).String())
+	for i := range Top15 {
+		emailText += fmt.Sprintf("                  %s                   \n", Top15[i].MarketName)
+		emailText += fmt.Sprintf("Price     : %s => %s (%%%s) \n", Top15[i].Pfrom.String(), Top15[i].Pto.String(), (Top15[i].Pchg.Div(Top15[i].Pfrom)).Mul(percent).String())
+		emailText += fmt.Sprintf("BaseVolume: %s => %s (VolumeChange %s, %%%s) \n", Top15[i].Vfrom.String(), Top15[i].Vto.String(), Top15[i].Vchg.String(),
+			Top15[i].Vchg.Div(Top15[i].Vfrom).Mul(percent).String())
 
 		if lenhour > 1 {
 
 			for ihour, v := range HourRecSlice {
 
 				found := 0
-				for isum := range v.Top10 {
-					if v.Top10[isum].MarketName == Top10[i].MarketName {
+				for isum := range v.Top15 {
+					if v.Top15[isum].MarketName == Top15[i].MarketName {
 						found = isum + 1
 						break
 					}
 				}
 
-				vLastSlice := v.smap[Top10[i].MarketName]
+				vLastSlice := v.smap[Top15[i].MarketName]
 				vlastlen := len(vLastSlice)
 
 				if vlastlen < 1 {
@@ -99,15 +99,25 @@ func SummaryHourReport(smap map[string][]*MarketSummary) []SummaryReport {
 
 				vLastchg := vLastSlice[vlastlen-1].BaseVolume.Sub(vLastSlice[0].BaseVolume)
 
+				pLastchg := vLastSlice[vlastlen-1].Last.Sub(vLastSlice[0].Last)
+				pchRate := pLastchg.Div(vLastSlice[0].Last).Mul(percent)
+
+				pricechg := ""
+				if pchRate.IntPart() > 0 {
+					pricechg = fmt.Sprintf("%d", pchRate.IntPart())
+				} else {
+					pricechg = fmt.Sprintf("%s", pchRate.String()[:4])
+				}
+
 				seq := "x"
 				if found != 0 {
 					seq = strconv.Itoa(found)
 				}
 
 				if ihour == 0 {
-					emailText += fmt.Sprintf("%s(%s)", vLastchg.String(), seq)
+					emailText += fmt.Sprintf("%d(%s %s)", vLastchg.IntPart(), seq, pricechg)
 				} else {
-					emailText += fmt.Sprintf("=>%s(%s)", vLastchg.String(), seq)
+					emailText += fmt.Sprintf("=>%d(%s %s)", vLastchg.IntPart(), seq, pricechg)
 				}
 
 			}
@@ -116,10 +126,10 @@ func SummaryHourReport(smap map[string][]*MarketSummary) []SummaryReport {
 
 		emailText += fmt.Sprintf("\n\n")
 
-		if i == 9 {
-			Topic += Top10[i].MarketName
+		if i == 14 {
+			Topic += Top15[i].MarketName
 		} else {
-			Topic += (Top10[i].MarketName + ",")
+			Topic += (Top15[i].MarketName + ",")
 		}
 	}
 
@@ -129,7 +139,7 @@ func SummaryHourReport(smap map[string][]*MarketSummary) []SummaryReport {
 	History.Print("*************************************************\n")
 	History.Print(emailText)
 	// only returen top 5
-	return Top10[0:5]
+	return Top15[0:5]
 }
 
 func HourTask(crtcy *CurtCurrencyMem, hourSlicetop [][]SummaryReport) {
