@@ -103,12 +103,7 @@ func SummaryHourReport(smap map[string][]*MarketSummary) []SummaryReport {
 				pLastchg := vLastSlice[vlastlen-1].Last.Sub(vLastSlice[0].Last)
 				pchRate := pLastchg.Div(vLastSlice[0].Last).Mul(percent)
 
-				pricechg := ""
-				if pchRate.IntPart() > 0 {
-					pricechg = fmt.Sprintf("%d", pchRate.IntPart())
-				} else {
-					pricechg = fmt.Sprintf("%s", pchRate.String()[:4])
-				}
+				pricechg := fmt.Sprintf("%s", pchRate.String()[:4])
 
 				seq := "x"
 				if found != 0 {
