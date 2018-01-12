@@ -78,6 +78,7 @@ func SummaryHourReport(smap map[string][]*MarketSummary) []SummaryReport {
 		emailText += fmt.Sprintf("BaseVolume: %s => %s (VolumeChange %s, %%%s) \n", Top15[i].Vfrom.String(), Top15[i].Vto.String(), Top15[i].Vchg.String(),
 			Top15[i].Vchg.Div(Top15[i].Vfrom).Mul(percent).String())
 
+		seqtext := ""
 		if lenhour > 1 {
 
 			for ihour, v := range HourRecSlice {
@@ -115,13 +116,19 @@ func SummaryHourReport(smap map[string][]*MarketSummary) []SummaryReport {
 				}
 
 				if ihour == 0 {
-					emailText += fmt.Sprintf("%d(%s %s)", vLastchg.IntPart(), seq, pricechg)
+					emailText += fmt.Sprintf("%d(%s)", vLastchg.IntPart(), pricechg)
+					seqtext += fmt.Sprintf("%s", seq)
 				} else {
-					emailText += fmt.Sprintf("=>%d(%s %s)", vLastchg.IntPart(), seq, pricechg)
+					emailText += fmt.Sprintf("=>%d(%s)", vLastchg.IntPart(), pricechg)
+					seqtext += fmt.Sprintf(" %s", seq)
 				}
 
 			}
 
+		}
+
+		if seqtext != "" {
+			emailText += "\n" + seqtext
 		}
 
 		emailText += fmt.Sprintf("\n\n")
