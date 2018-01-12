@@ -4,5 +4,4 @@ func main() {
 	InitLog()
 	initMarketB()
 	GetSummaryTask()
-
 }
