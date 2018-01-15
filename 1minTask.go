@@ -189,14 +189,14 @@ func MinTasktobuy(sdifmap map[string][]MINDIF, mincrtcy *CurtCurrencyMem) {
 	//only process top 1 now, the other 2 can process later
 	TRIGGLE, _ := decimal.NewFromString("20.0")
 	Times20 := top3[0].times.Sub(TRIGGLE).GreaterThan(zero)
-	ONE, _ := decimal.NewFromString("1.0")
+	FIVE, _ := decimal.NewFromString("5.0")
 
 	btriggled := false
 
 	l1 := len(sdifmap[top3[0].coin])
 	if l1 > 1 {
 		pricebar, _ := decimal.NewFromString("0.30")
-		btriggled = Times20 && sdifmap[top3[0].coin][l1-1].BaseVolumedif.GreaterThan(ONE)
+		btriggled = Times20 && sdifmap[top3[0].coin][l1-1].BaseVolumedif.GreaterThan(FIVE)
 		dif := sdifmap[top3[0].coin][l1-1].Last.Sub(avgprice[top3[0].coin])
 
 		if btriggled && dif.Div(avgprice[top3[0].coin]).GreaterThan(pricebar) {

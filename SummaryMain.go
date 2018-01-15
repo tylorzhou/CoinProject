@@ -235,8 +235,8 @@ func GetSummaryTask() {
 		//minute task
 		MinReport(smap, sdifmap)
 
-		//MinTasktobuy(sdifmap, &mincrtcy)
-		MinTasktobuy1try(sdifmap, &mincrtcy)
+		MinTasktobuy(sdifmap, &mincrtcy)
+		//MinTasktobuy1try(sdifmap, &mincrtcy)
 
 		if Triggled.coin != "" && mincrtcy.Name != "BTC" {
 			MinTasktosell(smap, &mincrtcy)
