@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"runtime/debug"
 	"sort"
 	"strings"
 	"sync"
@@ -213,6 +215,13 @@ func WriteTradeHisotry(market, msg string) {
 }
 
 func TaskSec5() {
+	defer func() {
+		if err := recover(); err != nil {
+			Error.Printf("exception: %v \n %s\n", err,
+				debug.Stack())
+		}
+		os.Exit(1)
+	}()
 
 	for {
 		t := time.Now()
