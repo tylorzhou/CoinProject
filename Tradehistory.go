@@ -223,62 +223,64 @@ func TaskSec5() {
 		os.Exit(1)
 	}()
 
+	Hyped100old := make(map[string]int)
+
+	ignorfirst := true
 	for {
 		t := time.Now()
 		SecGetTrades()
 
 		d := time.Since(t)
-		mostrade := 0
-		market := ""
-		for k, v := range secRecMap {
-
-			if v.newadd > mostrade {
-				mostrade = v.newadd
-				market = k
-			}
-
-		}
-
-		v := secRecMap[market]
-
-		buycount := 0
-		buytotal, _ := decimal.NewFromString("0.0")
-		sellcount := 0
-		selltotal, _ := decimal.NewFromString("0.0")
-
-		for _, vt := range v.sumtrade {
-			if vt.OrderType == "BUY" {
-				buycount++
-				buytotal = buytotal.Add(vt.Total)
-			} else {
-				sellcount++
-				selltotal = selltotal.Add(vt.Total)
-			}
-		}
-
-		if mostrade > 0 {
-
-			msg := fmt.Sprintf("duration %s market %s mosttrade %d, price %s \n", d, market, mostrade, v.sumtrade[0].Price)
-			msg += fmt.Sprintf("%s buycount : %d(%f) buytotal %s sellcount : %d(%f) selltotal %s\n", TimeStamp(), buycount, float64(buycount)/float64(buycount+sellcount),
-				buytotal.String(), sellcount, float64(sellcount)/float64(sellcount+buycount), selltotal.String())
-
-			//fmt.Printf("%s", msg)
-			go WriteTradeHisotry(market, msg)
-		}
-
-		if mostrade == 100 {
-
-			msg := fmt.Sprintf("duration %s market %s mosttrade %d, price %s \n", d, market, mostrade, v.sumtrade[0].Price)
-			msg += fmt.Sprintf("%s buycount : %d(%f) buytotal %s sellcount : %d(%f) selltotal %s\n", TimeStamp(), buycount, float64(buycount)/float64(buycount+sellcount),
-				buytotal.String(), sellcount, float64(sellcount)/float64(sellcount+buycount), selltotal.String())
-
-			fmt.Printf("%s", msg)
-			WriteReport("./data/Tradehistory/Trade100.log", msg)
-		}
-
-		fmt.Printf("record history test all %s\n", d)
 
 		for k, v := range secRecMap {
+
+			buycount := 0
+			buytotal, _ := decimal.NewFromString("0.0")
+			sellcount := 0
+			selltotal, _ := decimal.NewFromString("0.0")
+
+			for _, vt := range v.sumtrade {
+				if vt.OrderType == "BUY" {
+					buycount++
+					buytotal = buytotal.Add(vt.Total)
+				} else {
+					sellcount++
+					selltotal = selltotal.Add(vt.Total)
+				}
+			}
+
+			if v.newadd > 0 {
+
+				if "BTC-XLM" == k {
+					if v.newadd > 0 {
+						fmt.Printf("len %d %v\n", v.newadd, v.sumtrade[0])
+						fmt.Printf("test secRecMap[BTC-XLM].lastid %d\n", secRecMap["BTC-XLM"].lastid)
+					}
+				}
+
+				msg := fmt.Sprintf("duration %s market %s trade %d, price %s \n", d, k, v.newadd, v.sumtrade[0].Price)
+				msg += fmt.Sprintf("%s buycount : %d(%f) buytotal %s sellcount : %d(%f) selltotal %s\n", TimeStamp(), buycount, float64(buycount)/float64(buycount+sellcount),
+					buytotal.String(), sellcount, float64(sellcount)/float64(sellcount+buycount), selltotal.String())
+
+				if Hyped100old[k] == 100 && v.newadd == 100 {
+					msg := TimeStamp() + "market:" + k + " is hot\n"
+					WriteReport("./data/Tradehistory/Hyped100market.log", msg)
+				}
+				Hyped100old[k] = v.newadd
+				//fmt.Printf("%s", msg)
+				go WriteTradeHisotry(k, msg)
+			}
+
+			if v.newadd == 100 && ignorfirst == false {
+				msg := fmt.Sprintf("duration %s market %s trade %d, price %s \n", d, k, v.newadd, v.sumtrade[0].Price)
+				msg += GetTicker(k)
+				msg += fmt.Sprintf("%s buycount : %d(%f) buytotal %s sellcount : %d(%f) selltotal %s\n", TimeStamp(), buycount, float64(buycount)/float64(buycount+sellcount),
+					buytotal.String(), sellcount, float64(sellcount)/float64(sellcount+buycount), selltotal.String())
+				fmt.Printf("%s", msg)
+
+				WriteReport("./data/Tradehistory/Trade100.log", msg)
+			}
+
 			secRecMap[k] = secRec{
 				lastid:   v.lastid,
 				newadd:   0,
@@ -286,5 +288,13 @@ func TaskSec5() {
 			}
 		}
 
+		ignorfirst = false
+		//fmt.Printf("record history test all %s\n", d)
 	}
+}
+
+func GetTicker(market string) string {
+	bittrex := bittrex.New(config.ApiKey, config.ApiSecret)
+	data, err := bittrex.GetTicker(market)
+	return fmt.Sprintf("err %v %v \n", err, data)
 }
