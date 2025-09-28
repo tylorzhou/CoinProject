@@ -26,7 +26,7 @@ func Summary15MinReport(smap map[string][]*MarketSummary) map[string]decimal.Dec
 		vchg := v[l-1].BaseVolume.Sub(v[l-intervel].BaseVolume)
 		if vchg.GreaterThan(vlimit) {
 
-			emailText := "**Volume increase 300, bittrex**\n"
+			emailText := "**Volume increase  300, bittrex**\n"
 			emailText += fmt.Sprintf("-----Volume increase 300----(%d Minutes report)---\n", intervel)
 			emailText += fmt.Sprintf(" 					%s  				\n", k)
 			emailText += fmt.Sprintf("Price     : %s => %s (%%%s) \n", v[l-intervel].Last.String(), v[l-1].Last.String(), v[l-1].Last.Sub(v[l-intervel].Last).Div(v[l-intervel].Last).Mul(percent).String())
